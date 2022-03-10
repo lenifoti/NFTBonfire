@@ -2,25 +2,49 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "./KlimaToken.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/ERC721.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/introspection/IERC165.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-abstract contract MemorialNft is ERC721, KlimaToken{
+//import "./KlimaERC20.sol";
 
-constructor() ERC721 ("MemorialNft", "MT")  {
-    
-}
+contract MemorialNFT is ERC721 {
 
-    function reMint(uint256 tokenId, address contractId) public {
-        
-        // toDo:
-        // check the sender == owner of tokenId
-        // transfer the tokenId to this address
-        // Then we actually do the real Safemint
-        // When we do the safemint we actually the transfer memorial nft to the one who sent us the oldNFT ( which will be msg.sender )
-        // Then we transfer KLIMA 
-        // require a minimum number of MATIC // ETH 
+    uint nextTokenId = 1; // count of reminted tokens is also used as the token ID
+    address kt;
+
+    constructor(address _k) ERC721("Memorial NFT", "MN"){
+
+        // Create KLIMA ERC20 tokens by call ing the constructor
+        kt = _k;
+    } 
+
+/*
+*   remint() takes an existing ERC721 and a Donation.
+*   The function then:
+*      - mints a new NFT
+*      - transfers it back tio the message sender
+*      - transfers the existing NFT to 'this'.
+*      - sends an amount of KLIMA to the msg.sender based on msg.value (1:1)
+* 
+*   Assumption: The sender must approve this contract to transfer the old token.
+*      function approve(address to, uint256 tokenId) public virtual override
+*/
+    function remint(address _oldNFT, uint256 _id, uint256 tokensToSend) payable public returns (bool)  {
+        //require(ERC721(_oldNFT).ownerOf(_id) == msg.sender,"Not owner");
+        require(msg.value >= 1, "Insufficient funds");
+        require(supportsInterface( type(IERC721).interfaceId), "Must be ERC721");
+
+        // Mint the NFT (needs to randomise)
+        _safeMint(msg.sender, nextTokenId++, "");
+
+        // Transfer the NFT to us. Assume it has been 'allowed'
+        ERC721(_oldNFT).transferFrom(msg.sender, address(this), _id);
+
+        // Send KLIMA tokens to the msg.sender
+        IERC20(kt).transfer(msg.sender, tokensToSend);
+
+        return (true);
     }
-
 
 }
