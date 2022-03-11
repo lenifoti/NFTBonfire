@@ -18,11 +18,14 @@
  *
  */
 
-// const HDWalletProvider = require('@truffle/hdwallet-provider');
+ const HDWalletProvider = require('@truffle/hdwallet-provider');
 // const infuraKey = "fj4jll3k.....";
 //
 // const fs = require('fs');
 // const mnemonic = fs.readFileSync(".secret").toString().trim();
+
+require('dotenv').config()
+var mnemonic = process.env.MNEMONIC;
 
 module.exports = {
   /**
@@ -36,6 +39,19 @@ module.exports = {
    */
 
   networks: {
+    development: {
+      host: "127.0.0.1",
+      port: 8545,
+      network_id: "*"
+     },
+     rinkeby: {
+         provider: function() { 
+          return new HDWalletProvider(mnemonic, "https://eth-rinkeby.alchemyapi.io/v2/84plPU-uvR1y2k9l33BhEnT2-GFiVAxB");
+         },
+         network_id: 4,
+         gas: 4500000,
+         gasPrice: 10000000000,
+     }
     // Useful for testing. The `development` name is special - truffle uses it by default
     // if it's defined here and no other network is specified at the command line.
     // You should run a client (like ganache-cli, geth or parity) in a separate terminal
