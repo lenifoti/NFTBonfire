@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>BUILDQUEST NFT BONFIRE METAVERSE</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+
+  <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+  <script src="https://unpkg.com/moralis/dist/moralis.js"></script>
+  <script> // front end functionality in here
+    function handleClickLogo() { //click logo to go to the home page
+      window.location.href = "http://localhost:4200/";
+    }
+    function handleClickMainBtn() { //click button to open a popup 
+      var mainpopup = document.getElementById("mainpopup");
+      mainpopup.classList.toggle("show");
+    }
+    function handleClickBurnBtn() {
+      // console.log('burn baby burn');
+      var burnpopup = document.getElementById("burnpopup");
+      burnpopup.classList.toggle("show");
+      approveForRemint();
+      reMint();
+
+    }
+    function handleClickMercyBtn() {
+      console.log('mercy!');
+    }
+
+
+  </script>
+
+  <script>  // was having issues with importing connect.js because the relative path was too secure i think (angular things) only way would be to import in polyfill.ts but web3 isn't working well natively
+    Moralis.initialize("5ZAEqifKLbhQ54QMheGJmlxf0s6i4LzfBAOVB8IH"); // Application id from moralis.io
+    Moralis.serverURL = "https://8tqclpjg9xnj.usemoralis.com:2053/server"; //Server url from moralis.io
+
+    const testNftContract = "0x9eE4f0346363eC55234B71C15DD52C867130dCB4";
+    const klimaTokenContract = "0x1FDF3fE764964F2578933e9725fdF819c219937e";
+    const MemorialNFTContract = "0xB96850FC015f059E6e6b748AcbB42F2200a03260";
+    const myWallet = "0xe377174A5aAd8c9e79aA695bf246A2F977CF0C4C";
+
+
+
+    initalizeWeb3();
+    prtTestNfts();
+    const web3 = new Web3(window.ethereum);
+
+    async function initalizeWeb3() {
+      Moralis.authenticate();
+    }
+
+
+    async function prtTestNfts() {
+      await Moralis.start({
+        serverUrl: "https://8tqclpjg9xnj.usemoralis.com:2053/server",
+        appId: "5ZAEqifKLbhQ54QMheGJmlxf0s6i4LzfBAOVB8IH"
+      })
+
+      var ABI = [
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+            }
+          ],
+          "name": "balanceOf",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "constant": true
+        }
+      ];
+
+      const options = {
+        chain: "rinkeby",
+        address: testNftContract,
+        function_name: "balanceOf",
+        abi: ABI,
+        params: { owner: myWallet }
+      }
+
+      const balanceOfTestNft = await Moralis.Web3API.native.runContractFunction(options);
+      //console.log(balanceOfTestNft);
+      // document.getElementById("oldNftBalance").innerHTML = `<div>You have ${balanceOfTestNft} Test Nfts to Remint </div>`;
+      console.log(`You have ${balanceOfTestNft} Test Nfts to Remint `)
+    }
+
+    async function approveForRemint() {
+      // let idForApproval = document.getElementById("testNftId").value;
+      // console.log("Your ID you clicked to be approved is:" + idForApproval);
+      let idForApproval = 2;
+
+      const options1 = {
+        // chain: "rinkeby",
+        contractAddress: testNftContract,
+        functionName: "approve",
+        abi: [{
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "approve",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }],
+        params: { to: MemorialNFTContract, tokenId: idForApproval },
+      };
+
+      const approve = await Moralis.executeFunction(options1);
+      console.log(approve);
+    }
+
+    async function sendKlima() {
+      let klimaNumbers = document.getElementById("klimaToken").value;
+      //console.log(klimaNumbers);
+
+      const options = {
+        contractAddress: klimaTokenContract,
+        functionName: "transfer",
+        abi: [{
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "transfer",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }],
+        params: { to: MemorialNFTContract, amount: klimaNumbers }
+      }
+
+      const send = await Moralis.executeFunction(options);
+      console.log(send);
+    }
+
+    async function reMint() {
+      // let NftToMint = document.getElementById("nftID").value;
+      // let Klimas = document.getElementById("klimaNumbers").value;
+      let NftToMint = 1;
+      let Klimas = 2 ^ 31 - 1;
+      //console.log(NftToMint);
+      //console.log(Klimas);
+
+      const options = {
+        contractAddress: MemorialNFTContract,
+        functionName: "remint",
+        abi: [
+            {
+                "inputs": [
+                  {
+                    "internalType": "address",
+                    "name": "_oldNFT",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "_id",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "tokensToSend",
+                    "type": "uint256"
+                  }
+                ],
+                "name": "remint",
+                "outputs": [
+                  {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                  }
+                ],
+                "stateMutability": "payable",
+                "type": "function",
+                "payable": true
+              }
+        ],
+        msgValue: 50000,
+        params: {
+          _oldNFT: testNftContract,
+          _id: NftToMint,
+          tokensToSend: Klimas,
+        }
+      }
+      const mint = await Moralis.executeFunction(options);
+      console.log(mint);
+    }
+
+  </script>
+
+</head>
+
+<body class="bg">
+  <div class="ui-container">
+    <div class="logo" onclick="handleClickLogo()"></div>
+    <div class="popup" id="mainpopup">
+      <div class="burn-ui-nft"></div>
+      <div class="burn-ui-animation">
+        <img id="burnpopup" class="fire" src="assets/prettydisturbed/Burn_animation.gif">
+      </div>
+      <div class="burn-ui-buttons-container">
+        <table>
+          <tr>
+            <div class="burn-btn" onclick="handleClickBurnBtn()"></div>
+            <div class="mercy-btn" onclick="handleClickMercyBtn()"></div>
+          </tr>
+        </table>
+      </div>
+
+    </div>
+    <div class="main-btn" onclick="handleClickMainBtn()"></div>
+  </div>
+
+  <div id="riki">
+
+    <h1 style="display: flex; justify-content: center;">Welcome to NFT Bonfire</h1>
+    <div style="display:flex; justify-content:  center;">Where you can remint your NFTs using your Old Ones ( to get
+      more skelly and BONES )</div>
+    <div style="display:flex; justify-content: center; margin-top: 1rem; font-size: xx-large;">
+      &#128128;&#128128;&#128128;</div>
+    <h3 style="margin-bottom: 1rem;">Test NFT Part:</h3>
+    <div style="margin-bottom: 1rem;" id="oldNftBalance"></div>
+    <div>Choose your Nft Id ( 1 to 10 ) you would like to be approved for Reminting</div>
+    <input id="testNftId" type="text" style="width: 150px;" placeholder="Nft Id here">
+    <button onclick="approveForRemint()">Approve</button>
+
+    <h3 style="margin-bottom: 1rem;">Klima Token Sending Part:</h3>
+    <input id="klimaToken" type="text" style="width: 200px;" placeholder="Klima token numbers here">
+    <button onclick="sendKlima()">SendKlima</button>
+
+    <h3 style="margin-bottom: 1rem;">NFT Reminting Part:</h3>
+
+    <div style="display: flex; flex-direction: column;">
+      <input id="nftID" placeholder="Put your NFT Id here" type="text" style="width: 150px;">
+      <input id="klimaNumbers" placeholder="Klima tokens to send" type="text" style="width: 150px;">
+
+      <button id="reMint" style="width: 160px;" onclick="reMint()">Remint your NFT</button>
+    </div>
+  </div>
+
+  <app-root></app-root>
+</body>
+
+
+</html>

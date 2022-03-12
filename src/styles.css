@@ -1,0 +1,108 @@
+/* You can add global styles to this file, and also import other style files */
+.logo {
+    background-image: url('../src/assets/prettydisturbed/Bonfirewebsite_logo2.png');
+    background-repeat: no-repeat;
+    height: 223px;
+    width: 700px;
+    margin: auto;
+    margin-top: 100px;
+}
+
+.bg {
+    background-image: url('../src/assets/prettydisturbed/Bonfirewebsite_big_bg1.jpg');
+    background-size: cover;
+    /* background-size: 100% 100vh; */
+    background-repeat: no-repeat;
+}
+
+.main-btn {
+    background-image: url('../src/assets/prettydisturbed/Bonfirewebsite_button.png');
+    background-repeat: no-repeat;
+    width: 748px;
+    height: 152px;
+    /* width: 100%; */
+    margin: auto;
+    margin-top: 822px;
+}
+
+/* The actual popup (appears on top) */
+.popup {
+    visibility: hidden;
+    /* background-image: url('../src/assets/prettydisturbed/Burn_nft.jpg'); */
+    background-color: white;
+    margin: auto;
+    width: 640px;
+    height: 640px;
+    border-radius: 12px;
+    margin: auto;
+    margin-top: 100px;
+}
+
+.fire {
+    visibility: hidden;
+}
+
+/* Toggle this class when clicking on the popup container (hide and show the popup) */
+.show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.burn-ui-nft {
+    /* background-image: url('../src/assets/prettydisturbed/Burn_animation.gif'); */
+    margin: auto;
+}
+
+.burn-ui-animation {
+    margin: auto;
+    width: 540px;
+    height: 540px;
+}
+
+
+.burn-ui-buttons-container {
+    height: 75px;
+    width: 440px;
+    margin: auto;
+    margin-top: 25px
+}
+
+.burn-btn {
+    background-image: url('../src/assets/prettydisturbed/burnbutton.png');
+    background-repeat: no-repeat;
+    width: 142px;
+    height: 48px;
+    float: left;
+
+}
+
+.mercy-btn {
+    background-image: url('../src/assets/prettydisturbed/mercybutton.png');
+    background-repeat: no-repeat;
+    width: 142px;
+    height: 48px;
+    float: right;
+}
+ 
