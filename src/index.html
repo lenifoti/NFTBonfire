@@ -20,10 +20,10 @@
       mainpopup.classList.toggle("show");
     }
     function handleClickBurnBtn() {
-      // console.log('burn baby burn');
+       console.log('burn baby burn');
       var burnpopup = document.getElementById("burnpopup");
       burnpopup.classList.toggle("show");
-      approveForRemint();
+     // approveForRemint();
       reMint();
 
     }
@@ -38,10 +38,10 @@
     Moralis.initialize("5ZAEqifKLbhQ54QMheGJmlxf0s6i4LzfBAOVB8IH"); // Application id from moralis.io
     Moralis.serverURL = "https://8tqclpjg9xnj.usemoralis.com:2053/server"; //Server url from moralis.io
 
-    const testNftContract = "0x9eE4f0346363eC55234B71C15DD52C867130dCB4";
-    const klimaTokenContract = "0x1FDF3fE764964F2578933e9725fdF819c219937e";
-    const MemorialNFTContract = "0xB96850FC015f059E6e6b748AcbB42F2200a03260";
-    const myWallet = "0xe377174A5aAd8c9e79aA695bf246A2F977CF0C4C";
+    const testNftContract = "0x9928B8ba18e15B94dB8f19f25b6A5fECFd496543";
+    const klimaTokenContract = "0x686CeE3ac8ACEaBf05C8724e5A5C5FE60a0d0Ab8";
+    const MemorialNFTContract = "0x0AeEBD7EA21254692991f069Aa4B5FCaF774a5AB";
+    const myWallet = "0xe256760b2554AC5950a676cCF3455E4De6ab98aE";
 
 
 
@@ -98,9 +98,9 @@
     }
 
     async function approveForRemint() {
-      // let idForApproval = document.getElementById("testNftId").value;
-      // console.log("Your ID you clicked to be approved is:" + idForApproval);
-      let idForApproval = 2;
+       let idForApproval = document.getElementById("testNftId").value;
+       console.log("Your ID you clicked to be approved is:" + idForApproval);
+      //let idForApproval = 2;
 
       const options1 = {
         // chain: "rinkeby",
@@ -138,26 +138,31 @@
       const options = {
         contractAddress: klimaTokenContract,
         functionName: "transfer",
-        abi: [{
-          "inputs": [
-            {
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-            }
-          ],
-          "name": "transfer",
-          "outputs": [
-            {
-              "internalType": "bool",
-              "name": "",
-              "type": "bool"
-            }
-          ],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        }],
-        params: { to: MemorialNFTContract, amount: klimaNumbers }
+        abi: [    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "transfer",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }],
+        params: { to: MemorialNFTContract, amount: klimaNumbers}
       }
 
       const send = await Moralis.executeFunction(options);
@@ -165,53 +170,51 @@
     }
 
     async function reMint() {
-      // let NftToMint = document.getElementById("nftID").value;
-      // let Klimas = document.getElementById("klimaNumbers").value;
-      let NftToMint = 1;
-      let Klimas = 2 ^ 31 - 1;
-      //console.log(NftToMint);
-      //console.log(Klimas);
+     // let NftToMint = document.getElementById("nftID").value;
+     // let Klimas = document.getElementById("klimaNumbers").value;
+     let nft = 1;
+     // console.log(NftToMint);
+     // console.log(Klimas);
 
       const options = {
         contractAddress: MemorialNFTContract,
         functionName: "remint",
         abi: [
-            {
-                "inputs": [
-                  {
-                    "internalType": "address",
-                    "name": "_oldNFT",
-                    "type": "address"
-                  },
-                  {
-                    "internalType": "uint256",
-                    "name": "_id",
-                    "type": "uint256"
-                  },
-                  {
-                    "internalType": "uint256",
-                    "name": "tokensToSend",
-                    "type": "uint256"
-                  }
-                ],
-                "name": "remint",
-                "outputs": [
-                  {
-                    "internalType": "bool",
-                    "name": "",
-                    "type": "bool"
-                  }
-                ],
-                "stateMutability": "payable",
-                "type": "function",
-                "payable": true
-              }
+        {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_oldNFT",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_id",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokensToSend",
+          "type": "uint256"
+        }
+      ],
+      "name": "remint",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
         ],
-        msgValue: 50000,
+      //  msgValue: 10000000000,
         params: {
-          _oldNFT: testNftContract,
-          _id: NftToMint,
-          tokensToSend: Klimas,
+          _oldNFT: myWallet,
+          _id: nft,
+          tokensToSend: 100,
         }
       }
       const mint = await Moralis.executeFunction(options);
@@ -241,35 +244,6 @@
 
     </div>
     <div class="main-btn" onclick="handleClickMainBtn()"></div>
-  </div>
-
-  <div id="riki">
-
-    <h1 style="display: flex; justify-content: center;">Welcome to NFT Bonfire</h1>
-    <div style="display:flex; justify-content:  center;">Where you can remint your NFTs using your Old Ones ( to get
-      more skelly and BONES )</div>
-    <div style="display:flex; justify-content: center; margin-top: 1rem; font-size: xx-large;">
-      &#128128;&#128128;&#128128;</div>
-    <h3 style="margin-bottom: 1rem;">Test NFT Part:</h3>
-    <div style="margin-bottom: 1rem;" id="oldNftBalance"></div>
-    <div>Choose your Nft Id ( 1 to 10 ) you would like to be approved for Reminting</div>
-    <input id="testNftId" type="text" style="width: 150px;" placeholder="Nft Id here">
-    <button onclick="approveForRemint()">Approve</button>
-
-    <h3 style="margin-bottom: 1rem;">Klima Token Sending Part:</h3>
-    <input id="klimaToken" type="text" style="width: 200px;" placeholder="Klima token numbers here">
-    <button onclick="sendKlima()">SendKlima</button>
-
-    <h3 style="margin-bottom: 1rem;">NFT Reminting Part:</h3>
-
-    <div style="display: flex; flex-direction: column;">
-      <input id="nftID" placeholder="Put your NFT Id here" type="text" style="width: 150px;">
-      <input id="klimaNumbers" placeholder="Klima tokens to send" type="text" style="width: 150px;">
-
-      <button id="reMint" style="width: 160px;" onclick="reMint()">Remint your NFT</button>
-    </div>
-  </div>
-
   <app-root></app-root>
 </body>
 
