@@ -36,7 +36,7 @@
       var burnpopup = document.getElementById("burnpopup");
       burnpopup.classList.toggle("show");
       approveForRemint();
-      reMint();
+      // reMint(); i called it inside approveForRemint() instead of here
 
     }
     function handleClickMercyBtn() {
@@ -61,9 +61,9 @@
     Moralis.initialize("5ZAEqifKLbhQ54QMheGJmlxf0s6i4LzfBAOVB8IH"); // Application id from moralis.io
     Moralis.serverURL = "https://8tqclpjg9xnj.usemoralis.com:2053/server"; //Server url from moralis.io
 
-    const testNftContract = "0xA2f4d71221B4A3E9f499aD1fCB16492f710f66AB";
-    const MemorialNFTContract = "0x911F5443C7ac9f22E070F86BB54089CEa381b393";
-    const klimaTokenContract = "0x8EeeeE1712d54affe31d4bd86C7c400e0789C999";
+    const testNftContract = "0x709b342cfd2D28F2e9c3413C49bE6A8946e9739f";
+    const MemorialNFTContract = "0x89d1Dd48C4ad8162d5ead8a878f0D812c23a1995";
+    const klimaTokenContract = "0x0ED4E8EB29A66FeEA6C922B0F5601A53789940f5";
     const myWallet = "0xa8C0B6eDaB2aE7BaF6C876F50631588EDE70b028";
 
     initalizeWeb3();
@@ -97,6 +97,7 @@
             console.log('no image for that nft');
           })
       });
+
     }
 
     function fixURL(url) {
@@ -140,15 +141,16 @@
       console.log(approve);
       document.getElementById("nft-view-container").innerHTML = `<img src="assets/prettydisturbed/Burnnft1.jpg" class="nft-thumbnail">`;    
 
+      reMint();
     } 
 
 
 async function reMint(){
-    let NftToMint = idForApproval;
+    let NftToMint = nftIndex;
     let Klimas = 1000; 
 
     const options = {
-        contractAddress: klimaTokenContract,
+        contractAddress: MemorialNFTContract,
         functionName: "remint",
         abi: [
             {
