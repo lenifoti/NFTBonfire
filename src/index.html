@@ -25,7 +25,7 @@
       var burnpopup = document.getElementById("burnpopup");
 
       mainpopup.classList.toggle("show");
-      background.classList.add("blur");
+      // background.classList.add("blur");
       burnpopup.classList.remove('show');
 
       getUserNFTs(); //acquire data that will be used to render front end
@@ -61,9 +61,9 @@
     Moralis.initialize("5ZAEqifKLbhQ54QMheGJmlxf0s6i4LzfBAOVB8IH"); // Application id from moralis.io
     Moralis.serverURL = "https://8tqclpjg9xnj.usemoralis.com:2053/server"; //Server url from moralis.io
 
-    const testNftContract = "0x9eE4f0346363eC55234B71C15DD52C867130dCB4";
-    const MemorialNFTContract = "0xB96850FC015f059E6e6b748AcbB42F2200a03260";
-    const myWallet = "0xe377174A5aAd8c9e79aA695bf246A2F977CF0C4C";
+    const testNftContract = "0x9928B8ba18e15B94dB8f19f25b6A5fECFd496543";
+    const MemorialNFTContract = "0x0AeEBD7EA21254692991f069Aa4B5FCaF774a5AB";
+    const myWallet = "0xa8C0B6eDaB2aE7BaF6C876F50631588EDE70b028";
 
     initalizeWeb3();
     // prtTestNfts(); // no longer needed because have
@@ -137,6 +137,8 @@
 
       const approve = await Moralis.executeFunction(options1);
       console.log(approve);
+      document.getElementById("nft-view-container").innerHTML = `<img src="assets/prettydisturbed/Burnnft1.jpg" class="nft-thumbnail">`;    
+
     } 
   </script>
 
