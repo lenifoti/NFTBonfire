@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" id="bg">
 
 <head>
   <meta charset="utf-8">
@@ -12,25 +12,48 @@
   <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
   <script src="https://unpkg.com/moralis/dist/moralis.js"></script>
   <script> // front end functionality in here
+
+    var nftArray = []; //global variable for nft rendering
+    var nftIndex = 0;
+
     function handleClickLogo() { //click logo to go to the home page
       window.location.href = "http://localhost:4200/";
     }
-    function handleClickMainBtn() { //click button to open a popup 
+    async function handleClickMainBtn() { //click button to open a popup 
       var mainpopup = document.getElementById("mainpopup");
+      var background = document.getElementById("bg");
+      var burnpopup = document.getElementById("burnpopup");
+
       mainpopup.classList.toggle("show");
+      background.classList.add("blur");
+      burnpopup.classList.remove('show');
+
+      getUserNFTs(); //acquire data that will be used to render front end
     }
+
     function handleClickBurnBtn() {
-       console.log('burn baby burn');
+      // console.log('burn baby burn');
       var burnpopup = document.getElementById("burnpopup");
       burnpopup.classList.toggle("show");
-     // approveForRemint();
-      reMint();
+      approveForRemint();
+      // reMint();
 
     }
     function handleClickMercyBtn() {
-      console.log('mercy!');
+      nftIndex = nftIndex + 1;
+      if (nftIndex >= nftArray.length) {
+        nftIndex = 0;
+      }
+      document.getElementById("nft-view-container").innerHTML = `<div><img src=${nftArray[nftIndex].image} class="nft-thumbnail"></div> 
+        <div class="burn-ui-animation">
+          <img id="burnpopup" class="fire" src="assets/prettydisturbed/Burn_animation.gif">
+        </div>`;
     }
 
+    function handleClickVRBtn() {
+      // console.log('VR!');
+      window.location.href = "http://localhost:4200/scene"
+    }
 
   </script>
 
@@ -38,69 +61,54 @@
     Moralis.initialize("5ZAEqifKLbhQ54QMheGJmlxf0s6i4LzfBAOVB8IH"); // Application id from moralis.io
     Moralis.serverURL = "https://8tqclpjg9xnj.usemoralis.com:2053/server"; //Server url from moralis.io
 
-    const testNftContract = "0x9928B8ba18e15B94dB8f19f25b6A5fECFd496543";
-    const klimaTokenContract = "0x686CeE3ac8ACEaBf05C8724e5A5C5FE60a0d0Ab8";
-    const MemorialNFTContract = "0x0AeEBD7EA21254692991f069Aa4B5FCaF774a5AB";
-    const myWallet = "0xe256760b2554AC5950a676cCF3455E4De6ab98aE";
-
-
+    const testNftContract = "0x9eE4f0346363eC55234B71C15DD52C867130dCB4";
+    const MemorialNFTContract = "0xB96850FC015f059E6e6b748AcbB42F2200a03260";
+    const myWallet = "0xe377174A5aAd8c9e79aA695bf246A2F977CF0C4C";
 
     initalizeWeb3();
-    prtTestNfts();
-    const web3 = new Web3(window.ethereum);
+    // prtTestNfts(); // no longer needed because have
 
+
+    const web3 = new Web3(window.ethereum);
     async function initalizeWeb3() {
       Moralis.authenticate();
     }
 
+    // happens when user clicks on main button
+    async function getUserNFTs() {
 
-    async function prtTestNfts() {
-      await Moralis.start({
-        serverUrl: "https://8tqclpjg9xnj.usemoralis.com:2053/server",
-        appId: "5ZAEqifKLbhQ54QMheGJmlxf0s6i4LzfBAOVB8IH"
-      })
+      const testnetNFTs = await Moralis.Web3.getNFTs({ chain: 'rinkeby' });
+      testnetNFTs.forEach(nft => {
+        let url = fixURL(nft.token_uri);
 
-      var ABI = [
-        {
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "owner",
-              "type": "address"
+        fetch(url)
+          .then(response => response.json())
+          .then(data => {
+            if (data.image) {
+              nftArray.push(data);
             }
-          ],
-          "name": "balanceOf",
-          "outputs": [
-            {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-            }
-          ],
-          "stateMutability": "view",
-          "type": "function",
-          "constant": true
-        }
-      ];
+            document.getElementById("nft-view-container").innerHTML = `<img src=${nftArray[nftIndex].image} class="nft-thumbnail">
+        <div class="burn-ui-animation">
+          <img id="burnpopup" class="fire" src="assets/prettydisturbed/Burn_animation.gif">
+        </div>`;
+            // $("#content").html($("#content").html()+"<img width=100 height=100 src='"+fixURL(data.image) + "''>");              
+          }).catch(err => { //error will catch if nft has no token_uri
+            console.log('no image for that nft');
+          })
+      });
+    }
 
-      const options = {
-        chain: "rinkeby",
-        address: testNftContract,
-        function_name: "balanceOf",
-        abi: ABI,
-        params: { owner: myWallet }
+    function fixURL(url) {
+      if (url.startsWith("ipfs")) {
+        return "https://ipfs.moralis.io:2053/ipfs/" + url.split("ipfs://ipfs/").slice(-1);
       }
-
-      const balanceOfTestNft = await Moralis.Web3API.native.runContractFunction(options);
-      //console.log(balanceOfTestNft);
-      // document.getElementById("oldNftBalance").innerHTML = `<div>You have ${balanceOfTestNft} Test Nfts to Remint </div>`;
-      console.log(`You have ${balanceOfTestNft} Test Nfts to Remint `)
+      else {
+        return url + "?format=json";
+      }
     }
 
     async function approveForRemint() {
-       let idForApproval = document.getElementById("testNftId").value;
-       console.log("Your ID you clicked to be approved is:" + idForApproval);
-      //let idForApproval = 2;
+      let idForApproval = nftIndex;
 
       const options1 = {
         // chain: "rinkeby",
@@ -129,109 +137,20 @@
 
       const approve = await Moralis.executeFunction(options1);
       console.log(approve);
-    }
-
-    async function sendKlima() {
-      let klimaNumbers = document.getElementById("klimaToken").value;
-      //console.log(klimaNumbers);
-
-      const options = {
-        contractAddress: klimaTokenContract,
-        functionName: "transfer",
-        abi: [    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "transfer",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    }],
-        params: { to: MemorialNFTContract, amount: klimaNumbers}
-      }
-
-      const send = await Moralis.executeFunction(options);
-      console.log(send);
-    }
-
-    async function reMint() {
-     // let NftToMint = document.getElementById("nftID").value;
-     // let Klimas = document.getElementById("klimaNumbers").value;
-     let nft = 1;
-     // console.log(NftToMint);
-     // console.log(Klimas);
-
-      const options = {
-        contractAddress: MemorialNFTContract,
-        functionName: "remint",
-        abi: [
-        {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_oldNFT",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_id",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "tokensToSend",
-          "type": "uint256"
-        }
-      ],
-      "name": "remint",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    }
-        ],
-      //  msgValue: 10000000000,
-        params: {
-          _oldNFT: myWallet,
-          _id: nft,
-          tokensToSend: 100,
-        }
-      }
-      const mint = await Moralis.executeFunction(options);
-      console.log(mint);
-    }
-
+    } 
   </script>
 
 </head>
 
-<body class="bg">
-  <div class="ui-container">
+<body>
+  <section id="ui-container" class="bg">
     <div class="logo" onclick="handleClickLogo()"></div>
     <div class="popup" id="mainpopup">
-      <div class="burn-ui-nft"></div>
-      <div class="burn-ui-animation">
-        <img id="burnpopup" class="fire" src="assets/prettydisturbed/Burn_animation.gif">
+      <div id="nft-view-container">
+
+        <div class="burn-ui-animation">
+          <img id="burnpopup" class="fire" src="assets/prettydisturbed/Burn_animation.gif">
+        </div>
       </div>
       <div class="burn-ui-buttons-container">
         <table>
@@ -244,6 +163,27 @@
 
     </div>
     <div class="main-btn" onclick="handleClickMainBtn()"></div>
+    <div class="vr-btn" onclick="handleClickVRBtn()"></div> 
+  </section>
+
+  <!-- <section id="info1">
+      <h1>WHY PAY TO BURN?</h1>
+      <p>NFT's have environmental impacts and a single Ethereum transactions's carbon footprint is estimated at 33.4kg
+        CO2.
+        Each time an NFT is minted or sold, that's another transaction.
+        When you burn your NFT, we are donating your fee to Klima DAO, a decentralized organization funding pro-climate
+        projects
+      </p>
+    </section>
+    <section id="info2">
+      <h1>HOW DOES IT WORK?</h1>
+      <p>Press the "Burn It Now!" button and choose an old NFT from your wallet you'd like to sacrifice for the climate.
+        Once you approve it, we burn it and tokens are transferred to Klima DAO.
+        For more immersive experience of destroying your beloved NFT's for climate, you can enter our VR tool for
+        burning them in a metaverse.
+      </p>
+    </section> -->
+
   <app-root></app-root>
 </body>
 

@@ -1,11 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
+body {
+    background-color: black;
+}
+
 .logo {
-    background-image: url('../src/assets/prettydisturbed/Bonfirewebsite_logo2.png');
+    background-image: url('../src/assets/prettydisturbed/Bonfirewebsite_logo.png');
     background-repeat: no-repeat;
-    height: 223px;
-    width: 700px;
+    height: 248px;
+    width: 899px;
     margin: auto;
-    margin-top: 100px;
+    margin-top: 50px;
 }
 
 .bg {
@@ -16,27 +20,53 @@
 }
 
 .main-btn {
-    background-image: url('../src/assets/prettydisturbed/Bonfirewebsite_button.png');
+    background-image: url('../src/assets/prettydisturbed/burn_it_button.png');
     background-repeat: no-repeat;
-    width: 748px;
-    height: 152px;
-    /* width: 100%; */
+    width: 729px;
+    height: 132px;
     margin: auto;
-    margin-top: 822px;
+    margin-top: 700px;
+}
+
+.main-btn:hover {
+    background-image: url('../src/assets/prettydisturbed/burn_it_button_hover.png');
+}
+
+.main-btn:active {
+    background-image: url('../src/assets/prettydisturbed/burn_it_button_press.png');
 }
 
 /* The actual popup (appears on top) */
 .popup {
     visibility: hidden;
-    /* background-image: url('../src/assets/prettydisturbed/Burn_nft.jpg'); */
     background-color: white;
     margin: auto;
     width: 640px;
-    height: 640px;
+    height: 740px;
     border-radius: 12px;
     margin: auto;
-    margin-top: 100px;
+    margin-top: 150px;
 }
+
+.vr-btn {
+    background-image: url('../src/assets/prettydisturbed/VR_btn.png');
+    background-repeat: no-repeat;
+    width: 441px;
+    height: 98px;
+    margin: auto;
+    margin-top: 25px;
+    padding-bottom: 25px;
+}
+
+.vr-btn:hover {
+    background-image: url('../src/assets/prettydisturbed/VR_btn_hover.png');
+}
+
+.vr-btn:active {
+    background-image: url('../src/assets/prettydisturbed/VR_btn_press.png');
+}
+
+
 
 .fire {
     visibility: hidden;
@@ -70,39 +100,79 @@
     }
 }
 
-.burn-ui-nft {
+#nft-view-container {
     /* background-image: url('../src/assets/prettydisturbed/Burn_animation.gif'); */
-    margin: auto;
+    height: 540px;
+    width: 640px;
+    padding-top: 50px;
+}
+
+.nft-thumbnail {
+    position: absolute;
+    height: 540px;
+    width: 540px;
+    padding-left: 50px;
 }
 
 .burn-ui-animation {
-    margin: auto;
+    position: absolute;
     width: 540px;
     height: 540px;
+    padding-left: 50px;
 }
 
 
 .burn-ui-buttons-container {
-    height: 75px;
-    width: 440px;
+    width: 540px;
     margin: auto;
-    margin-top: 25px
+    margin-top: 2px;
 }
 
 .burn-btn {
-    background-image: url('../src/assets/prettydisturbed/burnbutton.png');
+    background-image: url('../src/assets/prettydisturbed/burn_btn.png');
     background-repeat: no-repeat;
-    width: 142px;
-    height: 48px;
+    width: 260px;
+    height: 100px;
     float: left;
 
 }
 
+.burn-btn:hover {
+    background-image: url('../src/assets/prettydisturbed/burn_btn_hover.png');
+}
+
 .mercy-btn {
-    background-image: url('../src/assets/prettydisturbed/mercybutton.png');
+    background-image: url('../src/assets/prettydisturbed/mercy_btn.png');
     background-repeat: no-repeat;
-    width: 142px;
-    height: 48px;
+    width: 260px;
+    height: 100px;
     float: right;
+}
+
+.mercy-btn:hover {
+    background-image: url('../src/assets/prettydisturbed/mercy_btn_hover.png');
+}
+
+.blur {
+
+    -webkit-filter: blur(10px);
+    filter: blur(10px);
+
+}
+
+#info1 {
+    background-color: #341a95;
+}
+
+#info2 {
+    background-color: #832ab5;
+}
+
+@font-face {
+
+    font-family: 'Open Sans';
+    font-style: normal;
+    src: url(../src/assets/prettydisturbed/Marvin-Regular.ttf);
+    font-weight: 500;
 }
  
