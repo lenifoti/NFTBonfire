@@ -40,10 +40,10 @@ contract MemorialNFT is ERC721 {
         _safeMint(msg.sender, nextTokenId++, "");
 
         // Transfer the NFT to us. Assume it has been 'allowed'
-        ERC721(_oldNFT).transferFrom(msg.sender, address(this), _id);
+        // IERC721(_oldNFT).transferFrom(msg.sender, address(this), _id);
 
         // Send KLIMA tokens to the msg.sender
-        IERC20(kt).transfer(msg.sender, tokensToSend);
+        // IERC20(kt).transfer(msg.sender, tokensToSend);
 
         return (true);
     }
