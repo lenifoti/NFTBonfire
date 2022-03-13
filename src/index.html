@@ -36,7 +36,7 @@
       var burnpopup = document.getElementById("burnpopup");
       burnpopup.classList.toggle("show");
       approveForRemint();
-      // reMint();
+      reMint();
 
     }
     function handleClickMercyBtn() {
@@ -61,8 +61,9 @@
     Moralis.initialize("5ZAEqifKLbhQ54QMheGJmlxf0s6i4LzfBAOVB8IH"); // Application id from moralis.io
     Moralis.serverURL = "https://8tqclpjg9xnj.usemoralis.com:2053/server"; //Server url from moralis.io
 
-    const testNftContract = "0x9928B8ba18e15B94dB8f19f25b6A5fECFd496543";
-    const MemorialNFTContract = "0x0AeEBD7EA21254692991f069Aa4B5FCaF774a5AB";
+    const testNftContract = "0xA2f4d71221B4A3E9f499aD1fCB16492f710f66AB";
+    const MemorialNFTContract = "0x911F5443C7ac9f22E070F86BB54089CEa381b393";
+    const klimaTokenContract = "0x8EeeeE1712d54affe31d4bd86C7c400e0789C999";
     const myWallet = "0xa8C0B6eDaB2aE7BaF6C876F50631588EDE70b028";
 
     initalizeWeb3();
@@ -140,6 +141,54 @@
       document.getElementById("nft-view-container").innerHTML = `<img src="assets/prettydisturbed/Burnnft1.jpg" class="nft-thumbnail">`;    
 
     } 
+
+
+async function reMint(){
+    let NftToMint = idForApproval;
+    let Klimas = 1000; 
+
+    const options = {
+        contractAddress: klimaTokenContract,
+        functionName: "remint",
+        abi: [
+            {
+                "inputs": [
+                  {
+                    "internalType": "address",
+                    "name": "_oldNFT",
+                    "type": "address"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "_id",
+                    "type": "uint256"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "tokensToSend",
+                    "type": "uint256"
+                  }
+                ],
+                "name": "remint",
+                "outputs": [
+                  {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                  }
+                ],
+                "stateMutability": "payable",
+                "type": "function",
+                "payable": true
+              }
+        ],
+        params: {_oldNFT: testNftContract,
+                 _id: NftToMint, tokensToSend: Klimas}     
+    }
+    const mint = await Moralis.executeFunction(options);
+    console.log(mint);
+}
+
   </script>
 
 </head>
