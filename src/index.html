@@ -61,10 +61,10 @@
     Moralis.initialize("5ZAEqifKLbhQ54QMheGJmlxf0s6i4LzfBAOVB8IH"); // Application id from moralis.io
     Moralis.serverURL = "https://8tqclpjg9xnj.usemoralis.com:2053/server"; //Server url from moralis.io
 
-    const testNftContract = "0x709b342cfd2D28F2e9c3413C49bE6A8946e9739f";
-    const MemorialNFTContract = "0x89d1Dd48C4ad8162d5ead8a878f0D812c23a1995";
-    const klimaTokenContract = "0x0ED4E8EB29A66FeEA6C922B0F5601A53789940f5";
-    const myWallet = "0xa8C0B6eDaB2aE7BaF6C876F50631588EDE70b028";
+    const testNftContract = "0x19069B8776Ad3C328056117d6642587DCc87bbe5";
+    const MemorialNFTContract = "0x5637E26E3a1c276D7C40d0C723588C9454832eD7";
+    const klimaTokenContract = "0xC46f5923b5E81451Dfdf5ecd4Aa531bB233b2D2E";
+    const myWallet = "0x3402d992Ddfdc0832B7C1cB7d237818f933ebfC7";
 
     initalizeWeb3();
     // prtTestNfts(); // no longer needed because have
@@ -115,26 +115,26 @@
       const options1 = {
         // chain: "rinkeby",
         contractAddress: testNftContract,
-        functionName: "approve",
-        abi: [{
-          "inputs": [
-            {
-              "internalType": "address",
-              "name": "to",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "tokenId",
-              "type": "uint256"
-            }
-          ],
-          "name": "approve",
-          "outputs": [],
-          "stateMutability": "nonpayable",
-          "type": "function"
-        }],
-        params: { to: MemorialNFTContract, tokenId: idForApproval },
+        functionName: "setApprovalForAll",
+        abi: [    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "operator",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "approved",
+          "type": "bool"
+        }
+      ],
+      "name": "setApprovalForAll",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }],
+        params: { operator: MemorialNFTContract, approved: true},
       };
 
       const approve = await Moralis.executeFunction(options1);
@@ -146,49 +146,42 @@
 
 
 async function reMint(){
-    let NftToMint = nftIndex;
-    let Klimas = 1000; 
+    let Klimas = 1000000000000; 
 
     const options = {
         contractAddress: MemorialNFTContract,
         functionName: "remint",
         abi: [
-            {
-                "inputs": [
-                  {
-                    "internalType": "address",
-                    "name": "_oldNFT",
-                    "type": "address"
-                  },
-                  {
-                    "internalType": "uint256",
-                    "name": "_id",
-                    "type": "uint256"
-                  },
-                  {
-                    "internalType": "uint256",
-                    "name": "tokensToSend",
-                    "type": "uint256"
-                  }
-                ],
-                "name": "remint",
-                "outputs": [
-                  {
-                    "internalType": "bool",
-                    "name": "",
-                    "type": "bool"
-                  }
-                ],
-                "stateMutability": "payable",
-                "type": "function",
-                "payable": true
-              }
+        {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_oldNFT",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amountToSend",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_id",
+          "type": "uint256"
+        }
+      ],
+      "name": "remint",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
         ],
         params: {_oldNFT: testNftContract,
-                 _id: NftToMint, tokensToSend: Klimas}     
+          amountToSend: 1000000000000, _id: nftIndex, }     
     }
     const mint = await Moralis.executeFunction(options);
     console.log(mint);
+    nftIndex ++;
 }
 
   </script>
