@@ -151,20 +151,41 @@ export class EngineComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   joinVoice() {
-    console.log('joined');
     this.agoraRtcService.joinStream();
+    let joinbtn = new ElementRef(document.getElementById('join-btn')).nativeElement;
+    joinbtn.setAttribute('position', "0 -30 0");
+    let leavebtn = new ElementRef(document.getElementById('leave-btn')).nativeElement;
+    leavebtn.setAttribute('position', "-1 0.5 -3");
+
 
   }
 
 
   leaveVoice() {
     this.agoraRtcService.leaveAndRemoveLocalStream();
+    let leavebtn = new ElementRef(document.getElementById('leave-btn')).nativeElement;
+    leavebtn.setAttribute('position', "0 -30 0");
+    let joinbtn = new ElementRef(document.getElementById('join-btn')).nativeElement;
+    joinbtn.setAttribute('position', "0 1.25 -5");
   }
 
 
   muteInput() {
     // this.agoraRtcService.toggleMic();
-    console.log('mictoggled');
+    // console.log('mictoggled'); 
+    let micbtn = new ElementRef(document.getElementById('mic-btn')).nativeElement;
+
+    if (micbtn.getAttribute('muted') == 'true') {
+      micbtn.setAttribute('rotation', "0 0 0");
+      micbtn.setAttribute('muted', 'false');
+
+
+    }
+    else {
+      micbtn.setAttribute('muted', 'true');
+      micbtn.setAttribute('rotation', "0 0 90");
+
+    }
   }
 
 
